@@ -1,7 +1,17 @@
-import React from 'react'
-import transaction from './Transaction.json'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios';
 
 function Stats() {
+    const [transaction, setTransactions] = useState([])
+    useEffect(() => {
+        loadTransactions();
+    }, [])
+
+    const loadTransactions = async () => {
+        const response = await axios.get("http://localhost:8082/transaction")
+        setTransactions(response.data.transactions)
+        console.log(response.data.transactions)
+    }
     let soldItems=0;
     let unsoldItems=0;
     let totalSale=0;

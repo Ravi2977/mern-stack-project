@@ -15,7 +15,9 @@ const app = express();
 // Use express.json() middleware correctly
 app.use(express.json());
 app.use(cors());
-app.post("/addTransaction",transactionController.addTransaction);
+// app.post("/addTransaction",transactionController.addTransaction);
+app.get("/transaction",transactionController.fetchTransaction)
+app.delete("/transaction/:id",transactionController.deleteById)
 app.post('/notes',notesController.addNote);
 app.get("/notes", notesController.fetchNotes)
 

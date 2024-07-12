@@ -1,24 +1,36 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import transaction from './Transaction.json'
+
 
 function Dashboard() {
+    const [transaction, setTransactions] = useState([])
+    useEffect(() => {
+        loadTransactions();
+    }, [])
+
+    const loadTransactions = async () => {
+        const response = await axios.get("http://localhost:8082/transaction")
+        setTransactions(response.data.transactions)
+        console.log(response.data.transactions)
+    }
     const transactionData = transaction;
+
     const months = [
         'January', 'February', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December'
     ];
+    const handleSelectChange = (event) => {
+        setSelectedMonth(event.target.value);
+    };
+
     const [filter, setFilter] = useState('');
     const [selectedMonth, setSelectedMonth] = useState(3);
-    const [transactions, setTransactions] = useState([])
+
 
     const handleInputChange = (event) => {
         setFilter(event.target.value);
     };
 
-    const handleSelectChange = (event) => {
-        setSelectedMonth(event.target.value);
-    };
 
     for (let i = 0; i < transactionData.length; i++) {
         console.log(transactionData[i].id, ":-", parseInt(transactionData[i].dateOfSale.split("-")[1]))
@@ -69,36 +81,36 @@ function Dashboard() {
                         </tr>
                     </thead>
                     <tbody>
-                    {transaction.map((data, index) => {
-    const saleMonth = parseInt(data.dateOfSale.split("-")[1]);
-    const selectedMonthInt = parseInt(selectedMonth);
-    const lowerCaseFilter = filter.toLowerCase();
+                        {transaction.map((data, index) => {
+                            const saleMonth = parseInt(data.dateOfSale.split("-")[1]);
+                            const selectedMonthInt = parseInt(selectedMonth);
+                            const lowerCaseFilter = filter.toLowerCase();
 
-    if (selectedMonthInt === saleMonth) {
-        if (!filter || 
-            data.title.toLowerCase().includes(lowerCaseFilter) ||
-            data.description.toLowerCase().includes(lowerCaseFilter) ||
-            data.price.toString().includes(lowerCaseFilter)
-        ) {
-            return (
-                <tr key={index} className="odd:bg-white even:bg-gray-50 border-b dark:border-gray-700">
-                    <th scope="row" className="px-6 py-4 font-medium text-gray-900">{data.id}</th>
-                    <td className="px-6 py-4 font-medium text-gray-900">{data.title}</td>
-                    <td className="px-6 py-4 font-medium text-gray-900 w-96">
-                        <p className='text-wrap'>{data.description}</p>
-                    </td>
-                    <td className="px-6 py-4 font-medium text-gray-900">Rs.{data.price}</td>
-                    <td className="px-6 py-4 font-medium text-gray-900">{data.category}</td>
-                    <td className="px-6 py-4 font-medium text-gray-900">{data.sold ? "sold" : "not Sold"}</td>
-                    <td className="px-6 py-4 font-medium text-gray-900">
-                        <img src={data.image} className='h-20' alt={data.title} />
-                    </td>
-                </tr>
-            );
-        }
-    }
-    return null;
-})}
+                            if (selectedMonthInt === saleMonth) {
+                                if (!filter ||
+                                    data.title.toLowerCase().includes(lowerCaseFilter) ||
+                                    data.description.toLowerCase().includes(lowerCaseFilter) ||
+                                    data.price.toString().includes(lowerCaseFilter)
+                                ) {
+                                    return (
+                                        <tr key={index} className="odd:bg-white even:bg-gray-50 border-b dark:border-gray-700">
+                                            <th scope="row" className="px-6 py-4 font-medium text-gray-900">{data.id}</th>
+                                            <td className="px-6 py-4 font-medium text-gray-900">{data.title}</td>
+                                            <td className="px-6 py-4 font-medium text-gray-900 w-96">
+                                                <p className='text-wrap'>{data.description}</p>
+                                            </td>
+                                            <td className="px-6 py-4 font-medium text-gray-900">Rs.{data.price}</td>
+                                            <td className="px-6 py-4 font-medium text-gray-900">{data.category}</td>
+                                            <td className="px-6 py-4 font-medium text-gray-900">{data.sold ? "sold" : "not Sold"}</td>
+                                            <td className="px-6 py-4 font-medium text-gray-900">
+                                                <img src={data.image} className='h-20' alt={data.title} />
+                                            </td>
+                                        </tr>
+                                    );
+                                }
+                            }
+                            return null;
+                        })}
 
 
 

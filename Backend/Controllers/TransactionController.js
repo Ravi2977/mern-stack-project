@@ -1,6 +1,6 @@
 
 const Transaction = require('../Modals/Transaction')
-const transaction = [
+const transactions = [
     {
         "id": 1,
         "title": "Fjallraven  Foldsack No 1 Backpack Fits 15 Laptops",
@@ -603,27 +603,38 @@ const transaction = [
     }
 ]
 const addTransaction = async (req, resp) => {
-    // const { id, title, price, description, category, image, sold, dateOfSale } = req.body;
-    for(let i=0;i<transaction.length;i++){
+    const transaction = transactions; // Assuming the transactions are coming from the request body
+    const results = [];
+
+    for (let i = 0; i < transaction.length; i++) {
         const newTransaction = await Transaction.create({
-            id :transaction[i].id,
-            title:transaction[i].title,
-            price:transaction[i].price,
-            description:transaction[i].description,
-            category:transaction[i].category,
-            image:transaction[i].image,
-            sold:transaction[i].sold,
-            dateOfSale:transaction[i].dateOfSale
-        })
-        resp.json({ newTransaction })
+            id: transaction[i].id,
+            title: transaction[i].title,
+            price: transaction[i].price,
+            description: transaction[i].description,
+            category: transaction[i].category,
+            image: transaction[i].image,
+            sold: transaction[i].sold,
+            dateOfSale: transaction[i].dateOfSale
+        });
+        results.push(newTransaction);
     }
-}
+
+    resp.json({ results });
+};
+
 
 const fetchTransaction = async (req,resp)=>{
-    const transactions = Transaction.find();
+    const transactions =await Transaction.find();
     resp.json({transactions})
+}
+const deleteById=async (req,resp)=>{
+    const id =req.params.id;
+    const response =await Transaction.deleteOne({id:id});
+    resp.json({"Success":"Deleted"})
 }
 module.exports = ({
     addTransaction,
     fetchTransaction,
+    deleteById
 })
