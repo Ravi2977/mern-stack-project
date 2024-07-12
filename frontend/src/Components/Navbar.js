@@ -12,7 +12,7 @@ function Navbar() {
     </a>
     <nav className="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center">
       <NavLink className="mr-5 hover:text-gray-900 border-2 p-2 rounded-md hover:shadow-lg" to="/">Transaction Dashboard</NavLink>
-      <NavLink className="mr-5 hover:text-gray-900 border-2 p-2 rounded-md hover:shadow-lg" to="/stats">Statistic July</NavLink>
+      <NavLink className="mr-5 hover:text-gray-900 border-2 p-2 rounded-md hover:shadow-lg" to="/stats">Statistic </NavLink>
       <NavLink className="mr-5 hover:text-gray-900 border-2 p-2 rounded-md hover:shadow-lg" to="/charts">Bar chart</NavLink>
     </nav>
    
