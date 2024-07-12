@@ -56,6 +56,8 @@ function Dashboard() {
     const indexOfFirstTransaction = indexOfLastTransaction - transactionsPerPage;
     const currentTransactions = filteredTransactions.slice(indexOfFirstTransaction, indexOfLastTransaction);
 
+    const totalPages = Math.ceil(filteredTransactions.length / transactionsPerPage);
+
     return (
         <div>
             <div className='text-3xl font-bold my-4 text-blue-700 text-center'>Transaction Dashboard</div>
@@ -119,23 +121,28 @@ function Dashboard() {
                     </tbody>
                 </table>
             </div>
-
-            <div className='flex justify-center mt-4 mb-4'>
-                <button
-                    onClick={handlePreviousPage}
-                    disabled={currentPage === 1}
-                    className='border-2 rounded-lg p-2 shadow-lg mx-2'
-                >
-                    Previous
-                </button>
-                <button
-                    onClick={handleNextPage}
-                    disabled={indexOfLastTransaction >= filteredTransactions.length}
-                    className='border-2 rounded-lg p-2 shadow-lg mx-2'
-                >
-                    Next
-                </button>
+           
+            <div className='flex justify-between mt-4 mb-4 mx-36'>
+            <div> Page {currentPage} </div>
+                <div className='flex'>
+                    <button
+                        onClick={handlePreviousPage}
+                        disabled={currentPage === 1}
+                        className='border-2 rounded-lg p-2 shadow-lg mx-2'
+                    >
+                        Previous
+                    </button>
+                    <button
+                        onClick={handleNextPage}
+                        disabled={indexOfLastTransaction >= filteredTransactions.length}
+                        className='border-2 rounded-lg p-2 shadow-lg mx-2'
+                    >
+                        Next
+                    </button>
+                </div>
+                <div>total pages :-{totalPages}</div>
             </div>
+            
         </div>
     );
 }
