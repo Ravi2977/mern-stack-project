@@ -5,13 +5,14 @@ function Dashboard() {
     const [transactions, setTransactions] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [filter, setFilter] = useState('');
-    const [selectedMonth, setSelectedMonth] = useState(3);
+    const [selectedMonth, setSelectedMonth] = useState(0);
 
     const transactionsPerPage = 5;
     const months = [
         'January', 'February', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December'
     ];
+
     useEffect(() => {
         loadTransactions();
     }, []);
@@ -43,12 +44,13 @@ function Dashboard() {
         const saleMonth = parseInt(data.dateOfSale.split("-")[1]);
         const selectedMonthInt = parseInt(selectedMonth);
         const lowerCaseFilter = filter.toLowerCase();
-        
-        return (selectedMonthInt === saleMonth) && (
-            !filter ||
-            data.title.toLowerCase().includes(lowerCaseFilter) ||
-            data.description.toLowerCase().includes(lowerCaseFilter) ||
-            data.price.toString().includes(lowerCaseFilter)
+
+        return (
+            (selectedMonthInt === 0 || selectedMonthInt === saleMonth) &&
+            (!filter ||
+                data.title.toLowerCase().includes(lowerCaseFilter) ||
+                data.description.toLowerCase().includes(lowerCaseFilter) ||
+                data.price.toString().includes(lowerCaseFilter))
         );
     });
 
@@ -81,7 +83,7 @@ function Dashboard() {
                             onChange={handleSelectChange}
                             className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-2 rounded-lg p-2 shadow-lg"
                         >
-                            <option value="" disabled>Select a month</option>
+                            <option value="0">Select a month</option>
                             {months.map((month, index) => (
                                 <option key={index} value={index + 1}>{month}</option>
                             ))}
@@ -122,9 +124,9 @@ function Dashboard() {
                     </tbody>
                 </table>
             </div>
-           
+
             <div className='flex justify-between mt-4 mb-4 mx-36'>
-            <div> Page {currentPage} </div>
+                <div>Page {currentPage}</div>
                 <div className='flex'>
                     <button
                         onClick={handlePreviousPage}
@@ -141,9 +143,8 @@ function Dashboard() {
                         Next
                     </button>
                 </div>
-                <div>total pages :-{totalPages}</div>
+                <div>Total pages: {totalPages}</div>
             </div>
-            
         </div>
     );
 }
