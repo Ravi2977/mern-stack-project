@@ -32,5 +32,5 @@ Ensure you have the following installed:
 
 1. **Clone the repository**:
    ```sh
-   git clone https://github.com/your-username/your-repo.git
-   cd your-repo
+   git clone https://github.com/Ravi2977/mern-stack-project.git
+   cd mern-stack-project
