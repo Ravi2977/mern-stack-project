@@ -61,6 +61,7 @@ function Dashboard() {
     return (
         <div>
             <div className='text-3xl font-bold my-4 text-blue-700 text-center'>Transaction Dashboard</div>
+            <div className="text-red-700 text-center font-semibold">! Importetnt :- This app is deployed on render.com for free Deployment sometimes it can take upto 1-2 minutes to responding kindly wait for 1-2 minute</div>
             <div className='m-6 flex justify-around'>
                 <div className='flex justify-center items-center flex-col'>
                     <label htmlFor="searchName">Filter</label>

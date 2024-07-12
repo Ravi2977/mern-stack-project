@@ -63,6 +63,8 @@ function Chartbar() {
   return (
     <div className='flex justify-center items-center p-32 flex-col'>
       <div className='flex justify-center items-center flex-col mb-6'>
+      <div className="text-red-700 text-center font-semibold">! Importetnt :- This app is deployed on render.com for free Deployment sometimes it can take upto 1-2 minutes to responding kindly wait for 1-2 minute</div>
+
         <label htmlFor="month">Select month</label>
         <div className="relative inline-block text-left">
           <select
