@@ -10,7 +10,7 @@ function Chartbar() {
     }, [])
 
     const loadTransactions = async () => {
-        const response = await axios.get("http://localhost:8082/transaction")
+        const response = await axios.get("https://mern-stack-project-wcx3.onrender.com/transaction")
         setTransactions(response.data.transactions)
         console.log(response.data.transactions)
     }
