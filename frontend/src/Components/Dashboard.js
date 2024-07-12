@@ -1,41 +1,61 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
-
 function Dashboard() {
-    const [transaction, setTransactions] = useState([])
-    useEffect(() => {
-        loadTransactions();
-    }, [])
+    const [transactions, setTransactions] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [filter, setFilter] = useState('');
+    const [selectedMonth, setSelectedMonth] = useState(3);
 
-    const loadTransactions = async () => {
-        const response = await axios.get("https://mern-stack-project-wcx3.onrender.com/transaction")
-        setTransactions(response.data.transactions)
-        console.log(response.data.transactions)
-    }
-    const transactionData = transaction;
-
+    const transactionsPerPage = 5;
     const months = [
         'January', 'February', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December'
     ];
-    const handleSelectChange = (event) => {
-        setSelectedMonth(event.target.value);
+    useEffect(() => {
+        loadTransactions();
+    }, []);
+
+    const loadTransactions = async () => {
+        const response = await axios.get("https://mern-stack-project-wcx3.onrender.com/transaction");
+        setTransactions(response.data.transactions);
     };
 
-    const [filter, setFilter] = useState('');
-    const [selectedMonth, setSelectedMonth] = useState(3);
-
+    const handleSelectChange = (event) => {
+        setSelectedMonth(event.target.value);
+        setCurrentPage(1);
+    };
 
     const handleInputChange = (event) => {
         setFilter(event.target.value);
+        setCurrentPage(1);
     };
 
+    const handleNextPage = () => {
+        setCurrentPage(prevPage => prevPage + 1);
+    };
 
-    for (let i = 0; i < transactionData.length; i++) {
-        console.log(transactionData[i].id, ":-", parseInt(transactionData[i].dateOfSale.split("-")[1]))
-    }
-    console.log(selectedMonth)
+    const handlePreviousPage = () => {
+        setCurrentPage(prevPage => Math.max(prevPage - 1, 1));
+    };
+
+    const filteredTransactions = transactions.filter(data => {
+        const saleMonth = parseInt(data.dateOfSale.split("-")[1]);
+        const selectedMonthInt = parseInt(selectedMonth);
+        const lowerCaseFilter = filter.toLowerCase();
+        
+        return (selectedMonthInt === saleMonth) && (
+            !filter ||
+            data.title.toLowerCase().includes(lowerCaseFilter) ||
+            data.description.toLowerCase().includes(lowerCaseFilter) ||
+            data.price.toString().includes(lowerCaseFilter)
+        );
+    });
+
+    const indexOfLastTransaction = currentPage * transactionsPerPage;
+    const indexOfFirstTransaction = indexOfLastTransaction - transactionsPerPage;
+    const currentTransactions = filteredTransactions.slice(indexOfFirstTransaction, indexOfLastTransaction);
+
     return (
         <div>
             <div className='text-3xl font-bold my-4 text-blue-700 text-center'>Transaction Dashboard</div>
@@ -81,41 +101,40 @@ function Dashboard() {
                         </tr>
                     </thead>
                     <tbody>
-                        {transaction.map((data, index) => {
-                            const saleMonth = parseInt(data.dateOfSale.split("-")[1]);
-                            const selectedMonthInt = parseInt(selectedMonth);
-                            const lowerCaseFilter = filter.toLowerCase();
-
-                            if (selectedMonthInt === saleMonth) {
-                                if (!filter ||
-                                    data.title.toLowerCase().includes(lowerCaseFilter) ||
-                                    data.description.toLowerCase().includes(lowerCaseFilter) ||
-                                    data.price.toString().includes(lowerCaseFilter)
-                                ) {
-                                    return (
-                                        <tr key={index} className="odd:bg-white even:bg-gray-50 border-b dark:border-gray-700">
-                                            <th scope="row" className="px-6 py-4 font-medium text-gray-900">{data.id}</th>
-                                            <td className="px-6 py-4 font-medium text-gray-900">{data.title}</td>
-                                            <td className="px-6 py-4 font-medium text-gray-900 w-96">
-                                                <p className='text-wrap'>{data.description}</p>
-                                            </td>
-                                            <td className="px-6 py-4 font-medium text-gray-900">Rs.{data.price}</td>
-                                            <td className="px-6 py-4 font-medium text-gray-900">{data.category}</td>
-                                            <td className="px-6 py-4 font-medium text-gray-900">{data.sold ? "sold" : "not Sold"}</td>
-                                            <td className="px-6 py-4 font-medium text-gray-900">
-                                                <img src={data.image} className='h-20' alt={data.title} />
-                                            </td>
-                                        </tr>
-                                    );
-                                }
-                            }
-                            return null;
-                        })}
-
-
-
+                        {currentTransactions.map((data, index) => (
+                            <tr key={index} className="odd:bg-white even:bg-gray-50 border-b dark:border-gray-700">
+                                <th scope="row" className="px-6 py-4 font-medium text-gray-900">{data.id}</th>
+                                <td className="px-6 py-4 font-medium text-gray-900">{data.title}</td>
+                                <td className="px-6 py-4 font-medium text-gray-900 w-96">
+                                    <p className='text-wrap'>{data.description}</p>
+                                </td>
+                                <td className="px-6 py-4 font-medium text-gray-900">Rs.{data.price}</td>
+                                <td className="px-6 py-4 font-medium text-gray-900">{data.category}</td>
+                                <td className="px-6 py-4 font-medium text-gray-900">{data.sold ? "sold" : "not Sold"}</td>
+                                <td className="px-6 py-4 font-medium text-gray-900">
+                                    <img src={data.image} className='h-20' alt={data.title} />
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
+            </div>
+
+            <div className='flex justify-center mt-4 mb-4'>
+                <button
+                    onClick={handlePreviousPage}
+                    disabled={currentPage === 1}
+                    className='border-2 rounded-lg p-2 shadow-lg mx-2'
+                >
+                    Previous
+                </button>
+                <button
+                    onClick={handleNextPage}
+                    disabled={indexOfLastTransaction >= filteredTransactions.length}
+                    className='border-2 rounded-lg p-2 shadow-lg mx-2'
+                >
+                    Next
+                </button>
             </div>
         </div>
     );
