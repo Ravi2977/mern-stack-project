@@ -17,6 +17,7 @@ app.use(express.json());
 app.use(cors());
 // app.post("/addTransaction",transactionController.addTransaction);
 app.get("/transaction",transactionController.fetchTransaction)
+app.get("/trans/:id",transactionController.fetchById)
 app.delete("/transaction/:id",transactionController.deleteById)
 app.post('/notes',notesController.addNote);
 app.get("/notes", notesController.fetchNotes)
