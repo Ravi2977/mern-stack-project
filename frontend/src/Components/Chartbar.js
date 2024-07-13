@@ -4,7 +4,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 
 function Chartbar() {
   const [transaction, setTransactions] = useState([]);
-  const [selectedMonth, setSelectedMonth] = useState(0);
+  const [selectedMonth, setSelectedMonth] = useState(3);
 
   const months = [
     'All', 'January', 'February', 'March', 'April', 'May', 'June',

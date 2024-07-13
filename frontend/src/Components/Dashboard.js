@@ -5,7 +5,7 @@ function Dashboard() {
     const [transactions, setTransactions] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [filter, setFilter] = useState('');
-    const [selectedMonth, setSelectedMonth] = useState(0);
+    const [selectedMonth, setSelectedMonth] = useState(3);
 
     const transactionsPerPage = 5;
     const months = [

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 function Stats() {
-    const [selectedMonth, setSelectedMonth] = useState(0);
+    const [selectedMonth, setSelectedMonth] = useState(3);
     const [transactions, setTransactions] = useState([]);
     const [stats, setStats] = useState({ totalSale: 0, soldItems: 0, unsoldItems: 0 });
 
