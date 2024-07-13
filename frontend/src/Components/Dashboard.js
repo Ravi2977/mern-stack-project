@@ -83,7 +83,7 @@ function Dashboard() {
                             onChange={handleSelectChange}
                             className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-2 rounded-lg p-2 shadow-lg"
                         >
-                            <option value="0">Select a month</option>
+                            <option value="0">All</option>
                             {months.map((month, index) => (
                                 <option key={index} value={index + 1}>{month}</option>
                             ))}

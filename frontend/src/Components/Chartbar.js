@@ -2,33 +2,33 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-
 function Chartbar() {
-  const [transaction, setTransactions] = useState([])
-    useEffect(() => {
-        loadTransactions();
-    }, [])
+  const [transaction, setTransactions] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState(0);
 
-    const loadTransactions = async () => {
-        const response = await axios.get("https://mern-stack-project-wcx3.onrender.com/transaction")
-        setTransactions(response.data.transactions)
-        console.log(response.data.transactions)
-    }
-  const [selectedMonth, setSelectedMonth] = useState(3);
   const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
+    'All', 'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
-  const handleSelectChange = (event) => {
-    setSelectedMonth(event.target.value);
-  };
-  function groupProductsByPriceRange(transaction) {
 
+  useEffect(() => {
+    const loadTransactions = async () => {
+      const response = await axios.get("https://mern-stack-project-wcx3.onrender.com/transaction");
+      setTransactions(response.data.transactions);
+      console.log(response.data.transactions);
+    };
+    loadTransactions();
+  }, []);
+
+  const handleSelectChange = (event) => {
+    setSelectedMonth(parseInt(event.target.value));
+  };
+
+  const groupProductsByPriceRange = (transaction) => {
     // Define the price ranges
     const data = [
       { name: '0-100', min: 0, max: 100, quantity: 0 },
       { name: '101-200', min: 101, max: 200, quantity: 0 },
-
       { name: '201-300', min: 201, max: 300, quantity: 0 },
       { name: '301-400', min: 301, max: 400, quantity: 0 },
       { name: '401-500', min: 401, max: 500, quantity: 0 },
@@ -41,11 +41,8 @@ function Chartbar() {
 
     // Iterate over each product in the transaction array
     transaction.forEach(product => {
-      // Find the corresponding price range for the product
-      console.log("Sale date ", product.dateOfSale)
-      const saleMonth = parseInt(product.dateOfSale.split("-")[1])
-      const selectedMonthInt = parseInt(selectedMonth);
-      if (saleMonth === selectedMonthInt) {
+      const saleMonth = parseInt(product.dateOfSale.split("-")[1]);
+      if (selectedMonth === 0 || saleMonth === selectedMonth) {
         const range = data.find(range => product.price >= range.min && product.price <= range.max);
 
         // Increment the quantity for the found range
@@ -56,15 +53,16 @@ function Chartbar() {
     });
 
     return data.map(range => ({ name: range.name, quantity: range.quantity }));
-  }
+  };
 
   const groupedProducts = groupProductsByPriceRange(transaction);
 
   return (
     <div className='flex justify-center items-center p-32 flex-col'>
       <div className='flex justify-center items-center flex-col mb-6'>
-      <div className="text-red-700 text-center font-semibold">! Importetnt :- This app is deployed on render.com for free Deployment sometimes it can take upto 1-2 minutes to responding kindly wait for 1-2 minute</div>
-
+        <div className="text-red-700 text-center font-semibold">
+          ! Important: This app is deployed on render.com for free. Deployment sometimes it can take up to 1-2 minutes to respond. Kindly wait for 1-2 minutes.
+        </div>
         <label htmlFor="month">Select month</label>
         <div className="relative inline-block text-left">
           <select
@@ -72,9 +70,8 @@ function Chartbar() {
             onChange={handleSelectChange}
             className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-2 rounded-lg p-2 shadow-lg"
           >
-            <option value="" disabled>Select a month</option>
             {months.map((month, index) => (
-              <option key={index} value={index + 1}>{month}</option>
+              <option key={index} value={index}>{month}</option>
             ))}
           </select>
         </div>
@@ -83,12 +80,12 @@ function Chartbar() {
         <BarChart
           width={200}
           height={200}
-          data={groupedProducts} // use groupedProducts here
+          data={groupedProducts}
           margin={{ top: 5, right: 60, left: 20, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
-          <YAxis  />
+          <YAxis />
           <Tooltip />
           <Legend />
           <Bar dataKey="quantity" fill="#8884d8" />

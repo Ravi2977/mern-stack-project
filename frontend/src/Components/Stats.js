@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 function Stats() {
-    const [selectedMonth, setSelectedMonth] = useState(3);
+    const [selectedMonth, setSelectedMonth] = useState(0);
     const [transactions, setTransactions] = useState([]);
     const [stats, setStats] = useState({ totalSale: 0, soldItems: 0, unsoldItems: 0 });
 
     const months = [
-        'January', 'February', 'March', 'April', 'May', 'June',
+        'All', 'January', 'February', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December'
     ];
 
@@ -30,14 +30,13 @@ function Stats() {
 
         transactions.forEach(transaction => {
             const saleMonth = parseInt(transaction.dateOfSale.split("-")[1]);
-            if (selectedMonth === saleMonth) {
+            if (selectedMonth === 0 || selectedMonth === saleMonth) {
                 if (transaction.sold) {
                     soldItems += 1;
                     totalSale += transaction.price;
                 } else {
                     unsoldItems += 1;
                 }
-                
             }
         });
 
@@ -56,14 +55,13 @@ function Stats() {
                         onChange={handleSelectChange}
                         className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-2 rounded-lg p-2 shadow-lg"
                     >
-                        <option value="" disabled>Select a month</option>
                         {months.map((month, index) => (
-                            <option key={index} value={index + 1}>{month}</option>
+                            <option key={index} value={index}>{month}</option>
                         ))}
                     </select>
                 </div>
             </div>
-            <div className='text-3xl font-bold my-4 text-blue-700 text-center'>Statistics: {months[selectedMonth - 1]}</div>
+            <div className='text-3xl font-bold my-4 text-blue-700 text-center'>Statistics: {months[selectedMonth]}</div>
             <div className="h-96 w-[30rem] bg-yellow-300 rounded-lg flex justify-center items-center">
                 <div className="grid grid-cols-2 p-9">
                     <div>
